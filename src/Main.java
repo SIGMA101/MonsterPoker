@@ -21,16 +21,16 @@ public class Main {
     while (true) {
       mp.drawPhase(scanner);
       mp.battlePhase();
-      if (mp.getPlayerHp() <= 0 && mp.getCpuHp() <= 0) {
+      if (mp.isDraw()) {
         System.out.println("引き分け！");
-      } else if (mp.getPlayerHp() <= 0) {
+    } else if (mp.isCpuWin()) {
         System.out.println("CPU Win!");
-      } else if (mp.getCpuHp() <= 0) {
+    } else if (mp.isPlayerWin()) {
         System.out.println("Player Win!");
-      } else {
+    } else {
         Thread.sleep(2000);
         continue;
-      }
+    }
       break;
     }
     scanner.close();

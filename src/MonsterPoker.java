@@ -385,7 +385,7 @@ public class MonsterPoker {
     } else {
       double damage = this.p17 - this.c18;
       System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
-      this.c12 = this.c12 - damage;
+      applyDamageToCpu(damage);
     }
 
     // CPUの攻撃
@@ -404,7 +404,7 @@ public class MonsterPoker {
     } else {
       double damage = this.c17 - this.p18;
       System.out.printf("Playerは%.0fのダメージを受けた！\n", damage);
-      this.p11 = this.p11 - damage;
+      applyDamageToPlayer(damage);
     }
 
     System.out.println("PlayerのHPは" + this.p11);
@@ -412,13 +412,39 @@ public class MonsterPoker {
 
   }
 
-  public double getPlayerHp() {
-    return this.p11;
+  // public double getPlayerHp() {
+  //   return this.p11;
+  // }
+
+  // public double getCpuHp() {
+  //   return this.c12;
+  // }
+
+  public void applyDamageToPlayer(double damage) {
+    this.p11 -= damage;
+    System.out.printf("Playerは%.0fのダメージを受けた！\\n", damage);
+    System.out.println("PlayerのHPは" + this.p11);
   }
 
-  public double getCpuHp() {
-    return this.c12;
+  public void applyDamageToCpu(double damage) {
+      this.c12 -= damage;
+      System.out.printf("CPUは%.0fのダメージを受けた！\\n", damage);
+      System.out.println("CPUのHPは" + this.c12);
   }
+
+  public boolean isDraw() {
+    return this.p11 <= 0 && this.c12 <= 0;
+  }
+
+  public boolean isCpuWin() {
+      return this.p11 <= 0 && this.c12 > 0;
+  }
+
+  public boolean isPlayerWin() {
+      return this.c12 <= 0 && this.p11 > 0;
+  }
+
+
 
   public double getp15() {
     return this.p15;
