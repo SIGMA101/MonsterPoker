@@ -23,15 +23,18 @@ public class Main {
       mp.battlePhase();
       if (mp.isDraw()) {
         System.out.println("引き分け！");
-    } else if (mp.isCpuWin()) {
-        System.out.println("CPU Win!");
-    } else if (mp.isPlayerWin()) {
-        System.out.println("Player Win!");
-    } else {
-        Thread.sleep(2000);
-        continue;
-    }
-      break;
+        break;
+      }
+      if (mp.isCpuWin()) {
+          System.out.println("CPU Win!");
+          break;
+      }
+      if (mp.isPlayerWin()) {
+          System.out.println("Player Win!");
+          break;
+      }
+      Thread.sleep(2000);
+      continue;
     }
     scanner.close();
   }
