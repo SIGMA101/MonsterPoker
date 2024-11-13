@@ -382,11 +382,12 @@ public class MonsterPoker {
     System.out.println("CPUのモンスターによるガード！");
     if (this.c18 >= this.p17) {
       System.out.println("CPUはノーダメージ！");
-    } else {
-      double damage = this.p17 - this.c18;
-      System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
-      applyDamageToCpu(damage);
+      return;
     }
+    double damage = this.p17 - this.c18;
+    System.out.printf("CPUは%.0fのダメージを受けた！\n", damage);
+    applyDamageToCpu(damage);
+    
 
     // CPUの攻撃
     System.out.print("CPUのDrawした");
@@ -401,11 +402,12 @@ public class MonsterPoker {
     System.out.println("Playerのモンスターによるガード！");
     if (this.p18 >= this.c17) {
       System.out.println("Playerはノーダメージ！");
-    } else {
-      double damage = this.c17 - this.p18;
-      System.out.printf("Playerは%.0fのダメージを受けた！\n", damage);
-      applyDamageToPlayer(damage);
+      return;
     }
+    double damage = this.c17 - this.p18;
+    System.out.printf("Playerは%.0fのダメージを受けた！\n", damage);
+    applyDamageToPlayer(damage);
+    
 
     System.out.println("PlayerのHPは" + this.p11);
     System.out.println("CPUのHPは" + this.c12);
