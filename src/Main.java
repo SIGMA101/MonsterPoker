@@ -5,37 +5,45 @@ import java.util.Scanner;
  */
 public class Main {
 
-  /**
-   * モンスターポーカー 1. モンスターカードをユーザとCPUがランダムに5枚引く モンスターカードは5種類存在し，役によって攻撃力が変わる
-   * 2回まで指定したカードを交換できる
-   *
-   * 2. AP，DPを役に応じて計算し，バトル．DPを超えたAPの場合，差分はプレーヤーあるいはCPUへのダメージとなる 3.
-   * プレーヤーあるいはCPUのHPが0になったら終わり．
-   *
-   * @param args
-   * @throws InterruptedException
-   */
   public static void main(String[] args) throws InterruptedException {
-    MonsterPoker mp = new MonsterPoker();
-    Scanner scanner = new Scanner(System.in);// 標準入力
-    while (true) {
-      mp.drawPhase(scanner);
-      mp.battlePhase();
-      if (mp.isDraw()) {
-        System.out.println("引き分け！");
-        break;
-      }
-      if (mp.isCpuWin()) {
-          System.out.println("CPU Win!");
-          break;
-      }
-      if (mp.isPlayerWin()) {
-          System.out.println("Player Win!");
-          break;
-      }
-      Thread.sleep(2000);
-      continue;
-    }
+    MonsterPoker mp = initializeGame();
+    startGameLoop(mp);
+  }
+
+  private static MonsterPoker initializeGame() {
+    return new MonsterPoker();
+  }
+
+  private static void startGameLoop(MonsterPoker mp) throws InterruptedException {
+    Scanner scanner = new Scanner(System.in);
+    playUntilGameEnds(mp, scanner);
     scanner.close();
+  }
+
+  private static void playUntilGameEnds(MonsterPoker mp, Scanner scanner) throws InterruptedException {
+    while (true) {
+      playRound(mp, scanner);
+      if (isGameOver(mp)) break;
+      Thread.sleep(2000);
+    }
+  }
+
+  private static void playRound(MonsterPoker mp, Scanner scanner) {
+    mp.drawPhase(scanner);
+    mp.battlePhase();
+  }
+
+  private static boolean isGameOver(MonsterPoker mp) {
+    return displayResult(mp.isDraw(), "引き分け！") ||
+           displayResult(mp.isCpuWin(), "CPU Win!") ||
+           displayResult(mp.isPlayerWin(), "Player Win!");
+  }
+
+  private static boolean displayResult(boolean condition, String message) {
+    if (condition) {
+      System.out.println(message);
+      return true;
+    }
+    return false;
   }
 }
