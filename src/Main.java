@@ -28,18 +28,18 @@ public class Main {
     }
   }
 
-  private static void playRound(MonsterPoker mp, Scanner scanner) {
+  private static void playRound(MonsterPoker mp, Scanner scanner) throws InterruptedException{
     mp.drawPhase(scanner);
     mp.battlePhase();
   }
 
-  private static boolean isGameOver(MonsterPoker mp) {
+  private static boolean isGameOver(MonsterPoker mp) throws InterruptedException{
     return displayResult(mp.isDraw(), "引き分け！") ||
            displayResult(mp.isCpuWin(), "CPU Win!") ||
            displayResult(mp.isPlayerWin(), "Player Win!");
   }
 
-  private static boolean displayResult(boolean condition, String message) {
+  private static boolean displayResult(boolean condition, String message) throws InterruptedException{
     if (condition) {
       System.out.println(message);
       return true;
