@@ -4,43 +4,30 @@ import java.util.Scanner;
 /**
  * MonsterPoker
  */
+
 public class MonsterPoker {
-
   Random card = new Random();
+    Player player = new Player();
+    Player cpu = new Player();
+    
+    Monster[] monsters = {
+        new Monster("スライム", 10, 40),
+        new Monster("サハギン", 20, 20),
+        new Monster("ドラゴン", 30, 25),
+        new Monster("デュラハン", 25, 15),
+        new Monster("シーサーペント", 30, 20)
+    };
 
-  double p11 = 1000; //PlayerのHP
-  double c12 = 1000; //cpuのHP
-  int playerDeck[] = new int[5]; // 0~4までの数字（モンスターID）が入る
-  int cpuDeck[] = new int[5];
-  String monsters[] = { "スライム", "サハギン", "ドラゴン", "デュラハン", "シーサーペント" };// それぞれが0~4のIDのモンスターに相当する
-  int monsterAp[] = { 10, 20, 30, 25, 30 }; //各モンスターのAP
-  int monsterDp[] = { 40, 20, 25, 15, 20 }; //各モンスターのDP
-  int cpuExchangeCards[] = new int[5];// それぞれ0,1でどのカードを交換するかを保持する．{0,1,1,0,1}の場合は2,3,5枚目のカードを交換することを表す
-  String c13 = new String();// 交換するカードを1~5の数字の組み合わせで保持する．上の例の場合，"235"となる．
-  int playerYaku[] = new int[5];// playerのモンスターカードがそれぞれ何枚ずつあるかを保存する配列．{2,3,0,0,0}の場合，ID0が2枚,ID1が3枚あることを示す．
-  int cpuYaku[] = new int[5];// playerのモンスターカードがそれぞれ何枚ずつあるかを保存する配列．{2,3,0,0,0}の場合，ID0が2枚,ID1が3枚あることを示す．
-  double p15 = 1;// Playerの役によるAP倍率．初期値は1で役が決まると対応した数値になる．1.5倍の場合は1.5となる
-  double p16 = 1;// Playerの役によるDP倍率．初期値は1で役が決まると対応した数値になる．1.5倍の場合は1.5となる
-  double p17 = 0;// PlayerのAP
-  double p18 = 0;// PlayerのDP
-  double c15 = 1;// CPUの役によるAP倍率．1.5倍の場合は1.5となる
-  double c16 = 1;
-  double c17 = 0;
-  double c18 = 0;
-  // 役判定用フラグ
-  // 役判定
-  // 5が1つある：ファイブ->five = true
-  // 4が1つある：フォー->four = true
-  // 3が1つあり，かつ，2が1つある：フルハウス->three = true and pair = 1
-  // 2が2つある：ツーペア->pair = 2
-  // 3が1つある：スリー->three = true;
-  // 2が1つある：ペア->pair = 1
-  // 1が5つある：スペシャルファイブ->one=5
-  boolean five = false;
-  boolean four = false;
-  boolean three = false;
-  int pair = 0; // pair数を保持する
-  int one = 0;// 1枚だけのカードの枚数
+    int[] playerDeck = new int[5];
+    int[] cpuDeck = new int[5];
+    int[] cpuExchangeCards = new int[5];
+
+    // 役判定用フィールド
+    boolean five = false;
+    boolean four = false;
+    boolean three = false;
+    int pair = 0;
+    int one = 0;
 
   /**
    * 5枚のモンスターカードをプレイヤー/CPUが順に引く
@@ -49,44 +36,12 @@ public class MonsterPoker {
    */
   public void drawPhase(Scanner scanner) throws InterruptedException {
     // 初期Draw
-    System.out.println("PlayerのDraw！");
-    for (int i = 0; i < playerDeck.length; i++) {
-      this.playerDeck[i] = card.nextInt(5);
-    }
+    playerInitialDraw();
     // カードの表示
-    System.out.print("[Player]");
-    for (int i = 0; i < playerDeck.length; i++) {
-      System.out.printf("%s ", this.monsters[playerDeck[i]]);
-    }
-    System.out.println();
-
+    playerCardDisplay();
     // カードの交換
-    System.out.println("カードを交換する場合は1から5の数字（左から数えた位置を表す）を続けて入力してください．交換しない場合は0と入力してください");
-    String exchange = scanner.nextLine();
-    if (exchange.charAt(0) != '0') {
-      for (int i = 0; i < exchange.length(); i++) {
-        this.playerDeck[Character.getNumericValue(exchange.charAt(i)) - 1] = card.nextInt(5);
-      }
-      // カードの表示
-      System.out.print("[Player]");
-      for (int i = 0; i < playerDeck.length; i++) {
-        System.out.printf("%s ", this.monsters[playerDeck[i]]);
-      }
-      System.out.println();
-      System.out.println("もう一度カードを交換する場合は1から5の数字（左から数えた位置を表す）を続けて入力してください．交換しない場合は0と入力してください");
-      exchange = scanner.nextLine();
-      if (exchange.charAt(0) != '0') {
-        for (int i = 0; i < exchange.length(); i++) {
-          this.playerDeck[Character.getNumericValue(exchange.charAt(i)) - 1] = card.nextInt(5);
-        }
-        // カードの表示
-        System.out.print("[Player]");
-        for (int i = 0; i < playerDeck.length; i++) {
-          System.out.printf("%s ", this.monsters[playerDeck[i]]);
-        }
-        System.out.println();
-      }
-    }
+    playerCardExchangeTurn();
+    
 
     System.out.println("CPUのDraw！");
     for (int i = 0; i < cpuDeck.length; i++) {
@@ -198,6 +153,45 @@ public class MonsterPoker {
       }
       System.out.println();
     }
+  }
+
+  public void playerInitialDraw() throws InterruptedException{
+    System.out.println("PlayerのDraw！");
+    for (int i = 0; i < playerDeck.length; i++) {
+      this.playerDeck[i] = card.nextInt(5);
+    }
+    // return playerDeck;
+  }
+
+  public void playerCardDisplay() throws InterruptedException{
+    System.out.print("[Player]");
+    for (int i = 0; i < playerDeck.length; i++) {
+      System.out.printf("%s ", this.monsters[playerDeck[i]]);
+    }
+    System.out.println();
+  }
+
+
+  public void playerCardExchangeTurn() throws InterruptedException{
+    isExchange = playerCardExchange();
+    // カードの表示
+    playerCardDisplay();
+    if(isExchange){
+      playerCardExchange();
+    }
+    // カードの表示
+    playerCardDisplay();
+  }
+  
+
+  public boolean playerCardExchange() throws InterruptedException{
+    System.out.println("カードを交換する場合は1から5の数字（左から数えた位置を表す）を続けて入力してください．交換しない場合は0と入力してください");
+    String exchange = scanner.nextLine();
+    if (exchange.charAt(0) == '0') return false;
+    for (int i = 0; i < exchange.length(); i++) {
+      this.playerDeck[Character.getNumericValue(exchange.charAt(i)) - 1] = card.nextInt(5);
+    }
+    return true;
   }
 
   public void battlePhase() throws InterruptedException {
