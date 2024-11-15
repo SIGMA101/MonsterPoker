@@ -286,6 +286,7 @@ public class MonsterPoker {
       this.p16 = 0.5;
     }
     Thread.sleep(1000);
+    println(this.p15);
 
     // APとDPの計算
     for (int i = 0; i < playerYaku.length; i++) {
